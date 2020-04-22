@@ -58,11 +58,6 @@ namespace AutoStep.CommandLine
 
         private void AddCommonOptions()
         {
-            Add(new Option(new[] { "-d", "--directory" }, "Provide the base directory for the autostep project.")
-            {
-                Argument = new Argument<DirectoryInfo>(() => new DirectoryInfo(Environment.CurrentDirectory)).ExistingOnly()
-            });
-
             Add(new Option(new[] { "-c", "--config" }, "Specify the autostep configuration file.")
             {
                 Argument = new Argument<FileInfo>(() => null).ExistingOnly()

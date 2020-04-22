@@ -15,16 +15,17 @@ namespace AutoStep.CommandLine
             var parser = new CommandLineBuilder()
                             .AddCommand(new RunCommand())
                             .AddCommand(new BuildCommand())
+                            .AddCommand(new NewProjectCommand())
                             .UseParseErrorReporting()
                             .CancelOnProcessTermination()
                             .UseHelp()
                             .ConfigureConsole(context =>
                             {
                                 var console = context.Console;
- 
+
                                 var terminal = console.GetTerminal(false, OutputMode.Ansi);
 
-                                if(terminal is object)
+                                if (terminal is object)
                                 {
                                     return terminal;
                                 }
@@ -36,7 +37,7 @@ namespace AutoStep.CommandLine
 
             var result = parser.Parse(args);
 
-            if (args.Length == 0)
+            if (DisplayHelp(args))
             {
                 var console = new SystemConsole();
                 var helpBuilder = new HelpBuilder(console);
@@ -46,5 +47,13 @@ namespace AutoStep.CommandLine
 
             return await result.InvokeAsync();
         }
+
+        private static bool DisplayHelp(string[] args) =>
+            NoArgsPassed(args) ||
+            NewCmdWithNoSubCmds(args);
+
+        private static bool NoArgsPassed(string[] args) => args.Length == 0;
+
+        private static bool NewCmdWithNoSubCmds(string[] args) => args.Length == 1 && args[0] == "new";
     }
 }

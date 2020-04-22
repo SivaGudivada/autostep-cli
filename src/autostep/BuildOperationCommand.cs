@@ -1,4 +1,10 @@
-﻿using AutoStep.Extensions;
+﻿using System;
+using System.CommandLine;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoStep.Extensions;
 using AutoStep.Extensions.Abstractions;
 using AutoStep.Language;
 using AutoStep.Language.Interaction;
@@ -7,12 +13,6 @@ using AutoStep.Projects;
 using AutoStep.Projects.Files;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace AutoStep.CommandLine
 {
@@ -21,6 +21,10 @@ namespace AutoStep.CommandLine
     {
         public BuildOperationCommand(string name, string description = null) : base(name, description)
         {
+            Add(new Option(new[] { "-d", "--directory" }, "Provide the base directory for the autostep project.")
+            {
+                Argument = new Argument<DirectoryInfo>(() => new DirectoryInfo(Environment.CurrentDirectory)).ExistingOnly()
+            });
         }
 
         protected IConfiguration GetConfiguration(BaseProjectArgs args)
